@@ -1,6 +1,6 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
+Zoya Batool - corpus: campus_life
 
 > **This file is your submission.** Fill it in as you go — most sections get
 > written during the milestone that produces them, not at the end.
@@ -31,6 +31,8 @@
 
 **Chunk size:**
 **Overlap:**
+
+Notes (Milestone 1): starter made 88 chunks from 88 documents, 317 chars average (shortest 178, longest 549), via chunker.py::fallback_split — the 800-char window never splits a post. Posts are ~1–3 paragraphs; each stays on one topic but paragraphs cover different sub-points (e.g. health_center: walk-in hours vs. counselling). Most facts sit in a single sentence.
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
