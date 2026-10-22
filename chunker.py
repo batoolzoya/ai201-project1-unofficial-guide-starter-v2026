@@ -21,7 +21,7 @@ If you get stuck for 30 minutes, `fallback_split` is the original. Switch back
 to it, write down what you saw, and move on. That's a real observation about
 your pipeline, not giving up.
 """
-
+import re
 from dataclasses import dataclass
 
 import config
@@ -82,23 +82,38 @@ def fallback_split(
 
 def split_documents(documents: list[Document]) -> list[Chunk]:
     """
-    Split documents into chunks. ⚠️ REPLACE THE BODY OF THIS IN MILESTONE 3.
+    Paragraph chunker for campus_life.
 
-    Right now it just calls the fallback. That is the plain, generic behaviour
-    the brief is talking about.
-
-    When you write your own strategy, set `produced_by` to
-    "chunker.py::split_documents" so your README's Sample Chunks section names
-    the right function. `app.py chunks` prints that string for you.
-
-    Things worth thinking about before you write any code:
-      - Are your documents short posts or long guides?
-      - Is the useful information in one sentence, or spread over a paragraph?
-      - Would splitting on paragraph breaks keep more thoughts intact than
-        splitting on a character count?
+    Each post is a short title line followed by 1-3 paragraphs, and each
+    paragraph covers its own sub-point. So: split on blank lines, one chunk
+    per paragraph, with the post's title kept at the top of every chunk so
+    the chunk still says what it's about. No overlap, because a paragraph
+    is already a complete thought.
     """
-    return fallback_split(documents)
+    chunks: list[Chunk] = []
+    for doc in documents:
+        text = doc.text.replace("\r\n", "\n")
+        paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+        if not paragraphs:
+            continue
 
+        # Treat the first paragraph as a title if it's short and isn't a sentence.
+        first = paragraphs[0]
+        has_title = len(paragraphs) > 1 and len(first) < 80 and not first.endswith(".")
+        title = first if has_title else ""
+        body = paragraphs[1:] if has_title else paragraphs
+
+        for index, para in enumerate(body):
+            chunk_text = f"{title}\n{para}" if title else para
+            chunks.append(
+                Chunk(
+                    text=chunk_text,
+                    source=doc.source,
+                    index=index,
+                    produced_by="chunker.py::split_documents",
+                )
+            )
+    return chunks
 
 def describe(chunks: list[Chunk]) -> str:
     """A one-line summary, printed after indexing."""

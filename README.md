@@ -29,10 +29,11 @@ Zoya Batool - corpus: campus_life
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size: one paragraph in every chunk, keeping the post's title intact (62–396 characters, average 166)**
 
-Notes (Milestone 1): starter made 88 chunks from 88 documents, 317 chars average (shortest 178, longest 549), via chunker.py::fallback_split — the 800-char window never splits a post. Posts are ~1–3 paragraphs; each stays on one topic but paragraphs cover different sub-points (e.g. health_center: walk-in hours vs. counselling). Most facts sit in a single sentence.
+**Overlap: None**
+
+Initially, 88 chunks were being created from 88 documents. Each paragraph often discusses a different sub topic, such as in health_center, the second paragraph discusses counselling and in winter_gear, the second paragraph talks about path clearing times. Some paragraphs also discuss multiple subtopics such as the last paragraph in transit_shuttle discusses both cost and the stop that gets skipped. I decided for each chunk to be a paragraph, which is not perfect as some questions may require multiple paragraphs to answer completely and some paragraphs would include additional irrelevant information. However, given the general trend of one subtopic and complete thought per paragraph, it made sense. I kept the title in every chunk to make sure that the title alone is not treated as a chunk and the 88 chunks became 183.
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
@@ -55,29 +56,39 @@ Notes (Milestone 1): starter made 88 chunks from 88 documents, 317 chars average
 
      Milestone 3. -->
 
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+On the add/drop deadline
+You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `course_cs_340_exams.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+CS 340 Databases — assessment
+Start the term project in week three, not week eight; everyone learns this the hard way.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `course_phys_130_workload.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+Workload for PHYS 130 Mechanics
+People keep asking so: 7 hours a week, plus 3 on lab weeks. That's real time, not optimistic time.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `dining_verrill_street_grill_followup.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+Re: Verrill Street Grill
+Also worth saying: one register, so the queue is a single line no matter how busy. Nobody tells you this at orientation.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `housing_morrow_house.txt#1` — produced by: `chunker.py::split_documents`
 
 ```
+Morrow House — what it's actually like
+The good: cheapest housing tier by about $900 a year, and the singles are real singles.
 ```
 
 ## Sample Answer
