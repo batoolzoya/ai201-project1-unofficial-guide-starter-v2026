@@ -103,7 +103,9 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
 ```
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff:0.6**
+
+For the five test questions that I wrote, the distances I received were 0.504, 0.266, 0.210, 0.273 and 0.431. Three out of five are a close match and the question with the highest distance included a word i.e., 'clothing' that the relevant paragraph did not contain. The question with the second highest distance used the correct source but ranked it 2. This is likely because the answer was contained in the second paragraph of that file which discussed two subtopics: cost and the stop skipped. However, the distance still came out to be under 0.6 for all of the above. For the five irrelevant questions, I received the distances of 0.787, 0.923, 0.847, 0.849 and 0.860. These are all above the 0.6 cutoff and will be refused as we need. Additionally, the highest relevant question is closer to the cutoff than the lowest irrelevant question and that is a better standard than vice versa.
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -116,7 +118,16 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| What kind of clothing is recommended for the cold weather? | Yes | 0.504 |
+| When do the applications for study abroad for the following academic year open? | Yes | 0.266 |
+| How many hours a week can a student work during term? | Yes | 0.210 |
+| How long is the expected wait for a first counselling session? | Yes | 0.273 |
+| Does any stop get skipped by the campus shuttle? | Yes | 0.431 |
+| What is the capital of Mongolia? | No | 0.787 |
+| How do I change the oil in a diesel engine? | No | 0.923 |
+| Who won the 1994 World Cup? | No | 0.847 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.849 |
+| How do I write a for loop in Rust? | No | 0.860 |
 
 ## How I Used AI
 
