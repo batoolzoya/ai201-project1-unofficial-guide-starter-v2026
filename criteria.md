@@ -57,7 +57,11 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
+
+
 <!-- YOU WRITE THIS ONE.
+
+At least 4 of 5 sampled chunks are at least 70 characters long.
 
      How would you know if your chunks were the right size? Name something
      countable or observable.
@@ -72,12 +76,14 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
-
+<!--  -->
 
 
 ---
 
 ## 5. Your choice
+
+The answers are no longer than three sentences in at least 5 of my 5 test questions. The source citation doesn't count as a sentence.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -90,7 +96,7 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
-
+<!-- All questions can be answered in a single sentence. This is too check that the system is not returning responses that are too wordy -->
 
 
 ---
