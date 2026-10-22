@@ -2,24 +2,13 @@
 
 Zoya Batool - corpus: campus_life
 
-> **This file is your submission.** Fill it in as you go — most sections get
-> written during the milestone that produces them, not at the end.
->
-> How the starter works, and every command you'll need, is in `RUNNING.md`.
-> Leave that file alone.
->
-> **Paste everything as text.** No screenshots, no video. A typed table gets
-> full credit; a picture of the same table gets none.
->
-> Delete these instruction blocks as you replace them. The `<!-- -->` comments
-> are notes to you and don't show up when the page renders — you can leave them
-> or remove them.
-
 ---
 
 # Unit 1
 
 ## What This Does
+
+I picked the campus_life corpus and the system answers questions that come from current/past students' insights. This is the information that comes from student experience and is not otherwise generally available through university communication. It handles questions regarding housing, dining, courses, deadlines, health, jobs and transit among others while naming the source file and refusing questions it cannot verify against a source.
 
 <!-- Three or four sentences. Which corpus you picked, and the kinds of
      questions your system answers. Write it for someone who has never seen
@@ -29,9 +18,9 @@ Zoya Batool - corpus: campus_life
 
 ## Chunking Strategy
 
-**Chunk size: one paragraph in every chunk, keeping the post's title intact (62–396 characters, average 166)**
+**Chunk size:** one paragraph in every chunk, keeping the post's title intact (62–396 characters, average 166)
 
-**Overlap: None**
+**Overlap:** None
 
 Initially, 88 chunks were being created from 88 documents. Each paragraph often discusses a different sub topic, such as in health_center, the second paragraph discusses counselling and in winter_gear, the second paragraph talks about path clearing times. Some paragraphs also discuss multiple subtopics such as the last paragraph in transit_shuttle discusses both cost and the stop that gets skipped. I decided for each chunk to be a paragraph, which is not perfect as some questions may require multiple paragraphs to answer completely and some paragraphs would include additional irrelevant information. However, given the general trend of one subtopic and complete thought per paragraph, it made sense. I kept the title in every chunk to make sure that the title alone is not treated as a chunk and the 88 chunks became 183.
 
@@ -96,16 +85,24 @@ The good: cheapest housing tier by about $900 a year, and the singles are real s
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+
+**Question:** How long is the expected wait for a first counselling session?
 
 **Answer:**
 
 ```
+(best distance 0.273, cutoff 0.6)
+
+The expected wait for a first counselling session is usually three or four days.
+
+Source: health_center.txt
+
+Sources retrieved: admin_grade_appeals.txt, admin_library_holds.txt, advising_registration.txt, dining_the_ridgeway_cafe_followup.txt, health_center.txt
 ```
 
-**My relevance cutoff:0.6**
+**My relevance cutoff:** 0.6
 
-For the five test questions that I wrote, the distances I received were 0.504, 0.266, 0.210, 0.273 and 0.431. Three out of five are a close match and the question with the highest distance included a word i.e., 'clothing' that the relevant paragraph did not contain. The question with the second highest distance used the correct source but ranked it 2. This is likely because the answer was contained in the second paragraph of that file which discussed two subtopics: cost and the stop skipped. However, the distance still came out to be under 0.6 for all of the above. For the five irrelevant questions, I received the distances of 0.787, 0.923, 0.847, 0.849 and 0.860. These are all above the 0.6 cutoff and will be refused as we need. Additionally, the highest relevant question is closer to the cutoff than the lowest irrelevant question and that is a better standard than vice versa.
+For the five test questions that I wrote, the distances I received were 0.504, 0.266, 0.210, 0.273 and 0.431. Three out of five are a close match and the question with the highest distance included a word i.e., 'clothing' that the relevant paragraph did not contain. The question with the second highest distance used the correct file and paragraph but ranked it 2 (under the other paragraph in the same file). This is likely because the answer was contained in the second paragraph of that file which discussed two subtopics: cost and the stop skipped. However, the distance still came out to be under 0.6 for all of the above. For the five irrelevant questions, I received the distances of 0.787, 0.923, 0.847, 0.849 and 0.860. These are all above the 0.6 cutoff and will be refused as we need. Additionally, the highest relevant question is closer to the cutoff than the lowest irrelevant question and that is a better standard than vice versa.
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -140,9 +137,9 @@ For the five test questions that I wrote, the distances I received were 0.504, 0
 
      Milestone 5. -->
 
-**1.**
+**1.** I wanted each paragraph to be in a single chunk and Claude wrote the splitting code for this purpose. The number of chunks went from 88 to 183, which makes sense since most of the 88 files contain about 2 paragraphs. 
 
-**2.**
+**2.** I asked Claude to not write the answers but help me arrive at them. My first idea for chunks was to be between 400 and 800 characters and Claude pointed out that the posts in characters average less than the lower limit. So, I went through the documents again, paying attention to the number of characters and decided on a lower limit of 70 to make sure there were no title-only chunks. 
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
