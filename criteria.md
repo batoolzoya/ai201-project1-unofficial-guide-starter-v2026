@@ -22,7 +22,7 @@ pipeline earns credit; *"80% seemed reasonable"* does not.
 For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
-**Why this target:**
+**Why this target:** One of my questions includes a keyword that the relevant file doesn't contain so I expect that one to be hard.
 <!-- e.g. "One of my questions is about a topic only two documents mention, so
      I expect that one to be hard." -->
 
@@ -32,7 +32,8 @@ contains the answer.
 
 Every answer the system produces names at least one source document.
 
-**Why this target:**
+**Why this target:** If not all cited the source, it would be difficult to catch the reason for any incorrect fails or passes.
+
 <!-- Why all five and not four? What about your setup makes that achievable —
      or what would have to go wrong for it not to be? -->
 
@@ -49,7 +50,8 @@ in at least 4 of 5 tries.
      what happened into your run log. Swap them for your own if you'd rather —
      just keep five of them, or the "4 of 5" above has nothing to be 4 of. -->
 
-**Why this target:**
+**Why this target:** An off topic question about a place could be confused as a relevant question about campus locations, which is why I kept 4/5.
+
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
 
@@ -57,11 +59,10 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
-
+At least 4 of 5 sampled chunks are at least 70 characters long.
 
 <!-- YOU WRITE THIS ONE.
 
-At least 4 of 5 sampled chunks are at least 70 characters long.
 
      How would you know if your chunks were the right size? Name something
      countable or observable.
@@ -75,8 +76,7 @@ At least 4 of 5 sampled chunks are at least 70 characters long.
 
 
 
-**Why this target:**
-<!--  -->
+**Why this target:** The facts are short and about 70 or more characters long.
 
 
 ---
@@ -93,10 +93,7 @@ The answers are no longer than three sentences in at least 5 of my 5 test questi
      present — anything, as long as it names a number or an observable
      outcome. -->
 
-
-
-**Why this target:**
-<!-- All questions can be answered in a single sentence. This is too check that the system is not returning responses that are too wordy -->
+**Why this target:** All questions can be answered in a single sentence. This is too check that the system is not returning responses that are too wordy
 
 
 ---
