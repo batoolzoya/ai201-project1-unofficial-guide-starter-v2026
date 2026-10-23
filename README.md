@@ -262,6 +262,8 @@ Criterion 5 was easy to pass since each question asked for one piece of informat
 
 The format of the questions and data makes criteria 1 and 2 easy to pass as well. Each question requests information about one fact from a single paragraph, which is how long a chunk is. Every paragraph that answers a fact that be traced back to a source file. 
 
+Retrieval weakness (not a miss): For the shuttle question, the right file came first but the wrong paragraph ranked highest: chunk #0 (route and loop) at 0.431, above chunk #1 (cost and the skipped Fenwick Court stop) at 0.514. Semantic search matched the general “campus shuttle” topic rather than the specific words “stop” and “skipped”. Criterion 1 still passed because it only requires the answer to be somewhere in the retrieved chunks, not first.
+
 <!-- For each miss: which stage caused it, and how. The stage alone isn't
      enough — you need the mechanism.
 
