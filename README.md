@@ -284,9 +284,9 @@ Retrieval weakness (not a miss): For the shuttle question, the right file came f
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** Added hybrid search in `store.py::search`. Chunks are now ranked by meaning (embedding distance) and by keywords (BM25, via `rank-bm25`), and the two rankings are merged with Reciprocal Rank Fusion. Each chunk keeps its real cosine distance, so the 0.6 cutoff is unchanged. A `HYBRID` switch at the top of `store.py` turns it off.
 
-**Why I picked it:**
+**Why I picked it:** My question "Does any stop get skipped by the campus shuttle?" was answered in paragraph 2 of campus_shuttle and contained the keywords stop and skipped. However, this paragraph ranked second, which is why I picked this change.
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
      you picked a fix because it sounded impressive. -->
@@ -298,13 +298,22 @@ Retrieval weakness (not a miss): For the shuttle question, the right file came f
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Sampled chunks at least 70 characters | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers three sentences or fewer | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
-**Did it help?**
+Full log: `results/run_2026-10-22_2249_after.md`. Criterion 4 is unchanged because chunking wasn't touched.
+
+Targeted measure: shuttle question, `python app.py retrieve "Does any stop get skipped by the campus shuttle?"`
+
+| | Rank 1 | Rank 2 |
+|---|---|---|
+| Before | transit_shuttle.txt#0 (route), 0.4313 | transit_shuttle.txt#1 (answer), 0.5140 |
+| After | transit_shuttle.txt#1 (answer), 0.5140 | transit_shuttle.txt#0 (route), 0.4313 |
+
+**Did it help?** Yes, the correct answer paragraph moved to first from second rank. Since all five were 5/5 before, the run log has not changed. Combining these two facts tells us that my criteria are too loose and doesn't currently include any statement that measures the retrieval order. This is what I would do differently when writing my criteria in the future. Also, adding weight to keywords pulled irrelevant chunks that had similar keywords such as 'course-hours' for 'hours a week' and added noise to the data pulled. 
 
 <!-- Say plainly whether it did, and how you know. If it made things worse,
      say that — a change that backfired, honestly reported, earns full credit
