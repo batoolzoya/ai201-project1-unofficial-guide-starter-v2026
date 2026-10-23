@@ -324,6 +324,8 @@ Targeted measure: shuttle question, `python app.py retrieve "Does any stop get s
 
 ## What's Still Broken
 
+No misses in any runs but as mentioned above, there is keyword noise, a relatively high distance of 0.504 on the clothing question and the broken criterion 4. Keyword noise may be fixed by weighing meaning heavier than keyword match, I am unsure about how to fix the clothing question and think that the fix for keyword noise may help here as well, and lastly, I would revise criterion 4 as mentioned below.
+
 <!-- For each criterion still missed after your fix: what you'd do about it,
      and why you stopped where you did.
 
@@ -333,6 +335,8 @@ Targeted measure: shuttle question, `python app.py retrieve "Does any stop get s
      Milestone 5. -->
 
 ## What I'd Do Differently
+
+Criterion 4 becomes "At least 4 of 5 sampled chunks read as a complete fact that answers a question on its own" and add a criterion that measures retrieval order of the chunks for example “For at least 4 of 5 test questions, the top-ranked chunk contains the answer.”.
 
 <!-- Knowing what you know now — which of your five criteria would you write
      differently, and why?
