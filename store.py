@@ -20,6 +20,8 @@ rest of the project if they were wrong:
 import os
 import shutil
 from dataclasses import dataclass
+import re
+from rank_bm25 import BM25Okapi
 
 # Must be set BEFORE chromadb is imported. Without it, some Chroma versions
 # print "Failed to send telemetry event ..." on every single call — which looks
@@ -50,6 +52,22 @@ _model = None
 # "fetch that one from Hugging Face instead" — see `_embedder`.
 BUNDLED_MODEL = "all-MiniLM-L6-v2"
 
+
+# ── Unit 2 improvement: hybrid search ──────────────────────────────────────
+# Set HYBRID = False to go back to meaning-only search for comparison.
+HYBRID = True
+RRF_K = 60  # standard Reciprocal Rank Fusion constant
+
+_STOPWORDS = {
+    "a", "an", "the", "is", "are", "do", "does", "did", "any", "by", "of",
+    "to", "in", "on", "for", "and", "or", "what", "when", "how", "who",
+    "i", "it", "be", "can", "at", "with", "my", "me",
+}
+
+
+def _tokens(text: str) -> list[str]:
+    """Lowercase words, minus very common ones, for keyword matching."""
+    return [w for w in re.findall(r"\w+", text.lower()) if w not in _STOPWORDS]
 
 class _OnnxEmbedder:
     """
@@ -185,9 +203,13 @@ def search(
     variant: str = "default",
 ) -> list[Result]:
     """
-    Retrieve the chunks closest in meaning to a question.
+    Retrieve the chunks closest to a question.
 
-    Returns them nearest-first, each with its distance.
+    Unit 2 improvement: when HYBRID is on, chunks are ranked by meaning
+    (embedding distance) AND by keywords (BM25), and the two rankings are
+    merged with Reciprocal Rank Fusion. Each Result still carries its real
+    cosine distance, so the relevance cutoff means what it always did; only
+    the order can change.
     """
     top_k = top_k or config.TOP_K
     name = config.collection_name(corpus, variant)
@@ -199,21 +221,35 @@ def search(
             f"No index called '{name}'. Run `python app.py index` first."
         ) from exc
 
-    raw = collection.query(
-        query_embeddings=embed([question]),
-        n_results=min(top_k, collection.count()),
-    )
+    total = collection.count()
+    # Hybrid needs every chunk's distance so both rankings cover the same set.
+    n = total if HYBRID else min(top_k, total)
+    raw = collection.query(query_embeddings=embed([question]), n_results=n)
+    docs = raw["documents"][0]
+    metas = raw["metadatas"][0]
+    dists = raw["distances"][0]
+
+    # Chroma returns nearest-first, so position i is the meaning rank.
+    order = list(range(len(docs)))
+
+    if HYBRID:
+        bm25 = BM25Okapi([_tokens(d) for d in docs])
+        kw_scores = bm25.get_scores(_tokens(question))
+        kw_order = sorted(order, key=lambda i: -kw_scores[i])
+        kw_rank = {i: r for r, i in enumerate(kw_order)}
+        fused = {i: 1 / (RRF_K + i + 1) + 1 / (RRF_K + kw_rank[i] + 1) for i in order}
+        # Highest fused score first; on a tie, the better keyword match wins.
+        order = sorted(order, key=lambda i: (-fused[i], kw_rank[i]))
 
     results: list[Result] = []
-    for text, meta, distance in zip(
-        raw["documents"][0], raw["metadatas"][0], raw["distances"][0]
-    ):
+    for i in order[:top_k]:
+        meta = metas[i]
         results.append(
             Result(
-                text=text,
+                text=docs[i],
                 source=str(meta.get("source", "unknown")),
                 label=f"{meta.get('source', 'unknown')}#{meta.get('index', 0)}",
-                distance=float(distance),
+                distance=float(dists[i]),
                 produced_by=str(meta.get("produced_by", "unknown")),
             )
         )
