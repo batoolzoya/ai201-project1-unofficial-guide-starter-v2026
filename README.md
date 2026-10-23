@@ -168,15 +168,71 @@ For the five test questions that I wrote, the distances I received were 0.504, 0
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Sampled chunks at least 70 characters | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers three sentences or fewer | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+
+Criteria 3 and 4 are deterministic (the gate is a fixed comparison and chunking doesn't change between runs), so they were measured in one pass and the same number goes in all three columns.
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+### Real output
+
+Full log: `results/run_2026-10-22_1824_before.md`, produced by `run_eval.py::main` (retrieval by `store.py::search`, chunks from `chunker.py::split_documents`).
+
+**Criterion 1** — "Does any stop get skipped by the campus shuttle?", run 1. The answer comes from a retrieved chunk (`transit_shuttle.txt`).
+
+```
+Best distance: 0.4313 (passed the gate)
+Sources retrieved: dining_the_atrium_followup.txt, transit_shuttle.txt, transit_walking.txt
+
+Yes, the stop outside Fenwick Court is the one that gets skipped when the driver is behind schedule (transit_shuttle.txt).
+```
+
+**Criterion 2** — "How many hours a week can a student work during term?", run 2. The answer names its source.
+
+```
+A student can work a maximum of 20 hours a week on-campus during term, though most people find 10 to 12 hours is the point where it stops affecting coursework. 
+
+Source: money_jobs.txt
+```
+
+**Criterion 3** — gate results from `run_eval.py::check_out_of_scope`, plus one question run through `app.py ask` to confirm the refusal message.
+
+```
+refused  (best distance 0.787)  What is the capital of Mongolia?
+refused  (best distance 0.923)  How do I change the oil in a diesel engine?
+refused  (best distance 0.847)  Who won the 1994 World Cup?
+refused  (best distance 0.849)  What is the recommended dosage of ibuprofen for a headache?
+refused  (best distance 0.860)  How do I write a for loop in Rust?
+-> gate refused 5 of 5
+```
+
+```
+> python app.py ask "What is the capital of Mongolia?"
+(best distance 0.787, cutoff 0.6)
+
+I don't have enough information about that.
+
+0 model calls this session
+```
+
+**Criterion 4** — lengths of the five chunks printed by `python app.py chunks -n 5`, from `chunker.py::split_documents`.
+
+```
+[('admin_add_drop_deadline.txt#0', 299), ('course_cs_340_exams.txt#1', 118), ('course_phys_130_workload.txt#0', 130), ('dining_verrill_street_grill_followup.txt#1', 145), ('housing_morrow_house.txt#1', 126)]
+```
+
+**Criterion 5** — "How long is the expected wait for a first counselling session?", run 1. One sentence, not counting the source line.
+
+```
+The expected wait for a first counselling session is usually three or four days. 
+
+Source: health_center.txt
+```
 
 ## Verdicts
 
