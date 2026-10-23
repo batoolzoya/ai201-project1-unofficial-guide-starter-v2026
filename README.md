@@ -247,13 +247,20 @@ Source: health_center.txt
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunks contain the answer | MET | 5/5 in every run i.e., each answer states a fact from a retrieved. |
+| 2 | Every answer names a source | MET | All answers cited and named a file. |
+| 3 | Gate stops out-of-corpus questions | MET | All questions that the documents do not clearly cover were blocked by the relevant gate, with response "I don't have enough information about that" |
+| 4 | Sampled chunks at least 70 characters | MET | All 5 sampled chunks were 118–299 characters. However, this criterion was broken (explained below) |
+| 5 | Answers three sentences or fewer | MET | All 15 answers were one sentence (not counting the source line.) |
 
 ## Diagnoses
+
+I had no misses and it was partly due to the fact that my 4th criterion was broken. I had split the paragraphs to be their own chunks and set the chunk size to be at least 70 characters long for this criterion. However, within the documents, there were three paragraphs that were less than 70 characters long and contained important information that the questions did not test. If the questions had asked about how many hours per week the courses CS210, PHYS130 or STAT150 are, criterion 4 would have counted those chunks as failures since the three paragraphs containing this information were 65, 62 and 69 char respectively. I would change this criterion to "At least 4 of 5 sampled chunks read as a complete fact that answers a question on its own" which will keep the three short paragraphs as chunks and fail any title-only chunks.
+
+
+Criterion 5 was easy to pass since each question asked for one piece of information that could be completely answered in a single sentence. I could consider changing this to be exactly one sentence but that would create a problem if a query asks multiple pieces of information at once such as "When does it get cold and how should I prepare for it?"
+
+The format of the questions and data makes criteria 1 and 2 easy to pass as well. Each question requests information about one fact from a single paragraph, which is how long a chunk is. Every paragraph that answers a fact that be traced back to a source file. 
 
 <!-- For each miss: which stage caused it, and how. The stage alone isn't
      enough — you need the mechanism.
